@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Nilai Mahasiswa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 420px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Kalkulator Nilai Mahasiswa</h2>
+    <form id="gradeForm">
+        <div class="form-group">
+            <label for="tugas">Nilai Tugas (30%):</label>
+            <input type="number" id="tugas" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="uts">Nilai UTS (30%):</label>
+            <input type="number" id="uts" step="any" required>
+        </div>
+        <div class="form-group">
+            <label for="uas">Nilai UAS (40%):</label>
+            <input type="number" id="uas" step="any" required>
+        </div>
+        <button type="submit">Hitung Nilai</button>
+        <div id="errorMsg" class="error"></div>
+    </form>
+
+    <div id="resultBox" class="result" style="display: none;">
+        <h3>Hasil Perhitungan:</h3>
+        <p>Nilai Akhir: <span id="resNilaiAkhir"></span></p>
+        <p>Predikat: <span id="resPredikat"></span></p>
+        <p>Status: <span id="resStatus"></span></p>
+    </div>
+</div>
+
+<script>
+    // Fungsi untuk menghitung nilai akhir
+    function hitungNilaiAkhir(tugas, uts, uas) {
+        return tugas * 0.30 + uts * 0.30 + uas * 0.40;
+    }
+
+    // Fungsi untuk menentukan predikat
+    function tentukanPredikat(nilai) {
+        if (nilai >= 85) return "A";
+        if (nilai >= 75) return "B";
+        if (nilai >= 60) return "C";
+        if (nilai >= 50) return "D";
+        return "E";
+    }
+
+    // Event listener untuk menangani form submission
+    document.getElementById("gradeForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const tugas = parseFloat(document.getElementById("tugas").value);
+        const uts = parseFloat(document.getElementById("uts").value);
+        const uas = parseFloat(document.getElementById("uas").value);
+        const errorMsg = document.getElementById("errorMsg");
+
+        // Validasi agar setiap nilai berada pada rentang 0-100[cite: 1]
+        if (tugas < 0 || tugas > 100 || uts < 0 || uts > 100 || uas < 0 || uas > 100) {
+            errorMsg.textContent = "Error: Nilai harus berada di antara rentang 0 sampai 100!";
+            document.getElementById("resultBox").style.display = "none";
+            return;
+        }
+
+        errorMsg.textContent = "";
+
+        // Proses perhitungan
+        const nilaiAkhir = hitungNilaiAkhir(tugas, uts, uas);
+        const predikat = tentukanPredikat(nilaiAkhir);
+        const status = nilaiAkhir >= 60 ? "Lulus" : "Belum lulus";
+
+        // Tampilkan hasil pada halaman HTML[cite: 1]
+        document.getElementById("resNilaiAkhir").textContent = nilaiAkhir.toFixed(2);
+        document.getElementById("resPredikat").textContent = predikat;
+        document.getElementById("resStatus").textContent = status;
+        document.getElementById("resultBox").style.display = "block";
+    });
+</script>
+
+</body>
+</html>
